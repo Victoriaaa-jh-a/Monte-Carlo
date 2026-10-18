@@ -1,0 +1,119 @@
+<div class="container">
+  <h2>Fábrica de Botellas con Agua - Método Monte Carlo</h2>
+
+<div class="card params-card">
+    <h3>Parámetros (Editables)</h3>
+    <div class="params-grid">
+      <div class="param-item">
+        <label for="costo">Costo de Producción ($):</label>
+        <input 
+          type="number" 
+          id="costo" 
+          [(ngModel)]="costoProduccion" 
+          step="0.5" 
+          min="0">
+      </div>
+
+      <div class="param-item">
+        <label for="precioMin">Precio de Venta Mín. ($):</label>
+        <input 
+          type="number" 
+          id="precioMin" 
+          [(ngModel)]="precioMin" 
+          step="0.5" 
+          min="0">
+      </div>
+
+      <div class="param-item">
+        <label for="precioMax">Precio de Venta Máx. ($):</label>
+        <input 
+          type="number" 
+          id="precioMax" 
+          [(ngModel)]="precioMax" 
+          step="0.5" 
+          min="0">
+      </div>
+
+      <div class="param-item">
+        <label for="demandaMin">Demanda Mín. (botellas):</label>
+        <input 
+          type="number" 
+          id="demandaMin" 
+          [(ngModel)]="demandaMin" 
+          min="0">
+      </div>
+
+      <div class="param-item">
+        <label for="demandaMax">Demanda Máx. (botellas):</label>
+        <input 
+          type="number" 
+          id="demandaMax" 
+          [(ngModel)]="demandaMax" 
+          min="0">
+      </div>
+  <div class="card input-section">
+    <label for="simulaciones">Número de Simulaciones (N):</label>
+    <input 
+      type="number" 
+      id="simulaciones" 
+      [(ngModel)]="numeroSimulaciones" 
+      min="1" 
+      max="100000">
+    <button (click)="ejecutarSimulacion()">Simular Escenarios</button>
+  </div>
+ </div>
+</div> 
+
+  <div *ngIf="simulacionEjecutada" class="results-grid">
+    <div class="metric-card">
+      <h3>Ganancia Promedio</h3>
+      <p class="value">${{ gananciaPromedio | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="metric-card favorable">
+      <h3>Ganancia Máxima (Más favorable)</h3>
+      <p class="value">${{ gananciaMaxima | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="metric-card desfavorable">
+      <h3>Ganancia Mínima (Menos favorable)</h3>
+      <p class="value">${{ gananciaMinima | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="metric-card warning">
+      <h3>Probabilidad de Ganancia menor a $1,000</h3>
+      <p class="value">{{ probabilidad | number:'1.2-2' }}%</p>
+    </div>
+  </div>
++
+<div *ngIf="simulacionEjecutada" class="card chart-card">
+  <h3>Distribución de Ganancias Simuladas (Histograma)</h3>
+  <canvas baseChart
+    [data]="histogramData"
+    [options]="histogramOptions"
+    [type]="'bar'">
+  </canvas>
+</div>
+  
+  <div *ngIf="simulacionEjecutada" class="card table-container">
+    <h3>Simulación </h3>
+    <table>
+      <thead>
+        <tr>
+          <th># Simulación</th>
+          <th>Precio de Venta ($)</th>
+          <th>Demanda (botellas)</th>
+          <th>Ganancia Semanal ($)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let res of resultados.slice(0, 1000)">
+          <td>{{ res.numero }}</td>
+          <td>${{ res.precio | number:'1.2-2' }}</td>
+          <td>{{ res.demanda }}</td>
+          <td>${{ res.ganancia | number:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
